@@ -5,16 +5,17 @@ import MobileNav from "./MobileNav";
 import { FcGoogle } from "react-icons/fc";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
-// import useAxiosPublic from "../../hooks/useAxiosPublic";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useUser from "../../hooks/useUser";
+import axios from "axios";
+import { BASE_URL } from "../../config";
 
 const NavBar = () => {
   const { user, logOut } = useContext(AuthContext);
   const [open, setToggle] = useState(false);
 
   const { googleSignIn } = useAuth();
-  // const axiosPublic = useAxiosPublic();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogOut = () => {
     logOut()
@@ -25,7 +26,9 @@ const NavBar = () => {
     toast.success("Successfully logged out!");
   };
 
-  console.log(user , 'user')
+  console.log(user, 'user')
+  const { currentUser } = useUser(user?.email);
+  console.log(currentUser, "currentUser");
 
   
 
@@ -34,17 +37,18 @@ const NavBar = () => {
       console.log(result.user);
       const userInfo = {
         email: result.user?.email,
-        name: result.user?.displayName,
+        displayName: result.user?.displayName,
         photoURL: result.user?.photoURL,
-        coin:50
+        coin: 50,
       };
-      console.log(userInfo)
-      // toast.success("Successfully logged in!");
-      // window.location.reload()
-      // axiosPublic.post("/users", userInfo).then((res) => {
-      //   console.log(res.data);
-      //   navigate("/");
-      // });
+      
+      // console.log(userInfo)
+      toast.success("Successfully logged in!");
+      window.location.reload()
+      axios.post(`${BASE_URL}/users`, userInfo).then((res) => {
+        console.log(res.data);
+        navigate("/");
+      });
     });
   };
 
@@ -56,7 +60,7 @@ const NavBar = () => {
           <nav className="flex h-16 items-center justify-between lg:h-16">
             <div className="flex-shrink-0">
               <Link to="/" className="flex text-2xl font-bold">
-                Recipe Sharing
+                Recipe Sharing 
               </Link>
             </div>
 
@@ -95,7 +99,6 @@ const NavBar = () => {
                 />
               </svg>
             </button>
-            
 
             <div className="hidden lg:ml-auto lg:flex lg:items-center lg:space-x-10">
               <Link
@@ -113,20 +116,18 @@ const NavBar = () => {
                 Recipes{" "}
               </Link>
             </div>
-            <div className="hidden lg:ml-auto lg:flex lg:items-center lg:space-x-10">
-              
-            </div>
+            <div className="hidden lg:ml-auto lg:flex lg:items-center lg:space-x-10"></div>
 
             {user && (
-              <div className="hidden  lg:flex items-center gap-8 px-4">
+              <div className="hidden  items-center gap-8 px-4 lg:flex">
                 <Link
-                  to="/add-recipes"
+                  to="/add-recipe"
                   className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
                 >
                   {" "}
                   Add Recipes{" "}
                 </Link>
-                <h4>Coins : 50</h4>
+                <h4>Coins : {currentUser?.coin}</h4>
                 <div className="avatar">
                   <div className="ring-primary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
                     <img src={user?.photoURL} />

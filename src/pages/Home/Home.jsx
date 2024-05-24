@@ -8,8 +8,8 @@ const Home = () => {
         <title>Recipe Sharing | Home</title>
       </Helmet>
       <Banner />
-      <SuccessStories />
       <Counter />
+      <SuccessStories />
       <DevInfo />
     </div>
   );

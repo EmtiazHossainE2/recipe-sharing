@@ -59,7 +59,7 @@ const MobileNav = ({ open, setToggle, user, handleLogOut }) => {
             {user && (
               <div className="flex flex-col  space-y-3  text-white">
                 <Link
-                  to="/add-recipes"
+                  to="/add-recipe"
                   className="mb-5 text-base  font-medium transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
                 >
                   {" "}

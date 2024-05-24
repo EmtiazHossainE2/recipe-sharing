@@ -1,32 +1,45 @@
 import  { useState, useEffect } from "react";
 import CountUp from "react-countup";
+import { BASE_URL } from "../../config";
 
 const Counter = () => {
-  // State for recipe and user counts
   const [recipeCount, setRecipeCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
 
-  // Simulated data fetching (replace with actual fetching logic)
+  //  data fetching 
   useEffect(() => {
-    // Simulated API call to fetch recipe count
-    const fetchRecipeCount = () => {
-      // Replace this with actual API call to fetch recipe count
-      setTimeout(() => {
-        setRecipeCount(253); // Example recipe count
-      }, 1000);
+    const fetchRecipeCount = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/recipes`,
+        );
+        const data = await response.json();
+        setRecipeCount(data.length);
+        setTimeout(() => {
+          setRecipeCount(data.length); 
+        }, 1000);
+      } catch (error) {
+        console.error("Error fetching recipe count:", error);
+      }
     };
 
-    // Simulated API call to fetch user count
-    const fetchUserCount = () => {
-      // Replace this with actual API call to fetch user count
-      setTimeout(() => {
-        setUserCount(126); // Example user count
-      }, 1500);
+    const fetchUserCount = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/users`);
+        const data = await response.json();
+        setUserCount(data?.length);
+        setTimeout(() => {
+          setUserCount(data?.length); 
+        }, 1500);
+      } catch (error) {
+        console.error("Error fetching user count:", error);
+      }
     };
 
     fetchRecipeCount();
     fetchUserCount();
   }, []);
+  
 
   return (
     <div className="">
@@ -48,7 +61,7 @@ const Counter = () => {
                 <span className="bg-gradient-to-r from-fuchsia-600 to-blue-600 bg-clip-text text-transparent">
                   <CountUp
                     start={0}
-                    end={6}
+                    end={19}
                     duration={2.5}
                     separator=","
                     className="text-7xl font-bold text-blue-600"
@@ -56,7 +69,7 @@ const Counter = () => {
                 </span>
               </h3>
               <p className="mt-4 text-xl font-medium text-gray-900">
-                Years in business
+                Our new Branch
               </p>
               <p className="mt-0.5 text-base text-gray-500">
                 Creating the successful path
