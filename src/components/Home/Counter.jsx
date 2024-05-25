@@ -14,9 +14,9 @@ const Counter = () => {
           `${BASE_URL}/recipes`,
         );
         const data = await response.json();
-        setRecipeCount(data.length);
+        setRecipeCount(data?.length);
         setTimeout(() => {
-          setRecipeCount(data.length); 
+          setRecipeCount(data?.length); 
         }, 1000);
       } catch (error) {
         console.error("Error fetching recipe count:", error);

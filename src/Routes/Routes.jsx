@@ -3,6 +3,7 @@ import Main from "../Layout/Main";
 import Home from "../pages/Home/Home";
 import PrivateRoute from "./PrivateRoute";
 import AddRecipe from "../pages/Add-Recipe/Add-Recipe";
+import Recipes from "../pages/Recipes/Recipes";
 
 export const router = createBrowserRouter([
   {
@@ -14,10 +15,14 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/recipes",
+        element: <Recipes />,
+      },
+      {
         path: "/add-recipe",
         element: (
           <PrivateRoute>
-            <AddRecipe/>
+            <AddRecipe />
           </PrivateRoute>
         ),
       },
