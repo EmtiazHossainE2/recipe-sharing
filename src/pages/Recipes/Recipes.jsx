@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL, COUNTRIES } from "../../config";
 import useViewRecipe from "../../hooks/useViewRecipe";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -12,24 +14,29 @@ const Recipes = () => {
   const [search, setSearch] = useState("");
   const { viewRecipe } = useViewRecipe();
   const [showAll, setShowAll] = useState(false);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/recipes`);
-        setRecipes(response.data);
-        setDisplayedRecipes(response.data.slice(0, 6));
-      } catch (error) {
-        console.error("Error fetching recipes:", error);
-      }
-    };
-
     fetchRecipes();
   }, []);
 
   useEffect(() => {
     filterRecipes();
-  }, [category, country, search, recipesToShow]);
+  }, [category, country, search, recipesToShow, recipes]);
+
+  const fetchRecipes = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/recipes`);
+      const recipesWithReaction = response.data.map((recipe) => ({
+        ...recipe,
+        reaction: recipe.reaction || [], 
+      }));
+      setRecipes(recipesWithReaction);
+      setDisplayedRecipes(recipesWithReaction.slice(0, 6));
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    }
+  };
 
   const filterRecipes = () => {
     let filteredRecipes = recipes;
@@ -61,6 +68,30 @@ const Recipes = () => {
 
   const handleLoadEmail = () => {
     setShowAll(true);
+  };
+
+  const token = localStorage.getItem("access-token");
+
+  const toggleReaction = async (recipeId) => {
+    if (!user) {
+      alert("You need to be logged in to react to a recipe");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `${BASE_URL}/recipe/${recipeId}/react`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      await fetchRecipes(); 
+    } catch (error) {
+      console.error("Error toggling reaction:", error);
+    }
   };
 
   return (
@@ -117,6 +148,7 @@ const Recipes = () => {
                 <th>Creator Email</th>
                 <th>Country</th>
                 <th>Total Watch</th>
+                <th>Favorite</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -167,11 +199,26 @@ const Recipes = () => {
                   <td>{recipe?.country}</td>
                   <td>{recipe?.watchCount}</td>
                   <td>
+                    {recipe?.reaction?.includes(user?.email) ? (
+                      <FaHeart
+                        size={20}
+                        className="cursor-pointer text-red-500"
+                        onClick={() => toggleReaction(recipe._id)}
+                      />
+                    ) : (
+                      <FaRegHeart
+                        size={20}
+                        className="cursor-pointer"
+                        onClick={() => toggleReaction(recipe._id)}
+                      />
+                    )}
+                  </td>
+                  <td>
                     <button
                       className="btn btn-primary btn-sm"
                       onClick={() => viewRecipe(recipe)}
                     >
-                      View The Recipe
+                      View Recipe
                     </button>
                   </td>
                 </tr>
@@ -181,7 +228,7 @@ const Recipes = () => {
         ) : (
           <h4 className="mt-6 text-center font-medium">No data found</h4>
         )}
-      </div>{" "}
+      </div>
       {displayedRecipes.length > 0 &&
         displayedRecipes.length < recipes.length && (
           <div className="mt-6 text-center">
@@ -195,5 +242,3 @@ const Recipes = () => {
 };
 
 export default Recipes;
-
-     

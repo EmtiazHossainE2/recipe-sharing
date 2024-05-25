@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import useUser from "../../hooks/useUser";
 import axios from "axios";
 import { BASE_URL } from "../../config";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const NavBar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -41,7 +40,6 @@ const NavBar = () => {
         displayName: result.user?.displayName,
         photoURL: result.user?.photoURL,
         coin: 50,
-        react:false ,
       };
       
       // console.log(userInfo)
@@ -54,21 +52,6 @@ const NavBar = () => {
     });
   };
 
-
-  const handleReactionToggle = async () => {
-    try {
-      const response = await axios.put(`${BASE_URL}/user/react`, {
-        email: currentUser?.email,
-      });
-      if (response.data.modifiedCount > 0) {
-        toast.success("Reaction updated successfully!");
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("Error updating reaction:", error);
-      toast.error("Failed to update reaction");
-    }
-  };
 
   
   return (
@@ -145,19 +128,7 @@ const NavBar = () => {
                   {" "}
                   Add Recipes{" "}
                 </Link>
-                {currentUser?.react ? (
-                  <FaHeart
-                    size={24}
-                    className="cursor-pointer text-red-500"
-                    onClick={handleReactionToggle}
-                  />
-                ) : (
-                  <FaRegHeart
-                    size={24}
-                    className="cursor-pointer"
-                    onClick={handleReactionToggle}
-                  />
-                )}
+                
 
                 <h4>Coins : {currentUser?.coin}</h4>
                 <div className="avatar">
