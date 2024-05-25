@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useUser from "../../hooks/useUser";
 import axios from "axios";
 import { BASE_URL } from "../../config";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const NavBar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -28,7 +29,7 @@ const NavBar = () => {
 
   // console.log(user, 'user')
   const { currentUser } = useUser(user?.email);
-  // console.log(currentUser, "currentUser");
+  console.log(currentUser, "currentUser");
 
   
 
@@ -40,6 +41,7 @@ const NavBar = () => {
         displayName: result.user?.displayName,
         photoURL: result.user?.photoURL,
         coin: 50,
+        react:false ,
       };
       
       // console.log(userInfo)
@@ -52,6 +54,22 @@ const NavBar = () => {
     });
   };
 
+
+  const handleReactionToggle = async () => {
+    try {
+      const response = await axios.put(`${BASE_URL}/user/react`, {
+        email: currentUser?.email,
+      });
+      if (response.data.modifiedCount > 0) {
+        toast.success("Reaction updated successfully!");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error updating reaction:", error);
+      toast.error("Failed to update reaction");
+    }
+  };
+
   
   return (
     <>
@@ -60,7 +78,7 @@ const NavBar = () => {
           <nav className="flex h-16 items-center justify-between lg:h-16">
             <div className="flex-shrink-0">
               <Link to="/" className="flex text-2xl font-bold">
-                Recipe Sharing 
+                Recipe Sharing
               </Link>
             </div>
 
@@ -127,9 +145,23 @@ const NavBar = () => {
                   {" "}
                   Add Recipes{" "}
                 </Link>
+                {currentUser?.react ? (
+                  <FaHeart
+                    size={24}
+                    className="cursor-pointer text-red-500"
+                    onClick={handleReactionToggle}
+                  />
+                ) : (
+                  <FaRegHeart
+                    size={24}
+                    className="cursor-pointer"
+                    onClick={handleReactionToggle}
+                  />
+                )}
+
                 <h4>Coins : {currentUser?.coin}</h4>
                 <div className="avatar">
-                  <div className="ring-primary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
+                  <div className="w-8 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100">
                     <img src={user?.photoURL} />
                   </div>
                 </div>
@@ -169,7 +201,7 @@ const NavBar = () => {
         <dialog id="login_modal" className="modal">
           <div className="modal-box">
             <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
                 ✕
               </button>
             </form>
