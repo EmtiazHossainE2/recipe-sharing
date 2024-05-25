@@ -4,6 +4,7 @@ import { BASE_URL, COUNTRIES } from "../../config";
 import useViewRecipe from "../../hooks/useViewRecipe";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { AuthContext } from "../../providers/AuthProvider";
+import toast from "react-hot-toast";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -74,7 +75,7 @@ const Recipes = () => {
 
   const toggleReaction = async (recipeId) => {
     if (!user) {
-      alert("You need to be logged in to react to a recipe");
+      toast.error("You need to be logged in to react to a recipe")
       return;
     }
 

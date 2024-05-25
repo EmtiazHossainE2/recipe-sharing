@@ -6,6 +6,7 @@ import useUser from "../../hooks/useUser";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { onCLickLink } from "../../hooks/useLinkClick";
 
 const Checkout = () => {
   const { id } = useParams();
@@ -81,6 +82,7 @@ const Checkout = () => {
       });
 
       navigate(`/recipes`);
+      onCLickLink()
       toast.success("Payment successful");
       
       setTimeout(() => {

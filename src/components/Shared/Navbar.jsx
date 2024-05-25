@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useUser from "../../hooks/useUser";
 import axios from "axios";
 import { BASE_URL } from "../../config";
+import { onCLickLink } from "../../hooks/useLinkClick";
 
 const NavBar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -51,6 +52,8 @@ const NavBar = () => {
       });
     });
   };
+
+  
 
 
   
@@ -105,6 +108,7 @@ const NavBar = () => {
               <Link
                 to="/"
                 className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
+                onClick={onCLickLink}
               >
                 {" "}
                 Home{" "}
@@ -112,6 +116,7 @@ const NavBar = () => {
               <Link
                 to="/recipes"
                 className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600 "
+                onClick={onCLickLink}
               >
                 {" "}
                 Recipes{" "}
@@ -124,11 +129,11 @@ const NavBar = () => {
                 <Link
                   to="/add-recipe"
                   className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
+                  onClick={onCLickLink}
                 >
                   {" "}
                   Add Recipes{" "}
                 </Link>
-                
 
                 <h4>Coins : {currentUser?.coin}</h4>
                 <div className="avatar">
