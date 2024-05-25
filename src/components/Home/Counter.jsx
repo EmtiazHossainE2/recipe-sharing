@@ -19,7 +19,7 @@ const Counter = () => {
           setRecipeCount(data?.length); 
         }, 1000);
       } catch (error) {
-        console.error("Error fetching recipe count:", error);
+        // console.error("Error fetching recipe count:", error);
       }
     };
 

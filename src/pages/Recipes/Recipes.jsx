@@ -1,31 +1,24 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL, COUNTRIES } from "../../config";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../providers/AuthProvider";
-import toast from "react-hot-toast";
-import Swal from "sweetalert2";
-import useUser from "../../hooks/useUser";
+import useViewRecipe from "../../hooks/useViewRecipe";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [displayedRecipes, setDisplayedRecipes] = useState([]);
-  const [recipesToShow, setRecipesToShow] = useState(1);
+  const [recipesToShow, setRecipesToShow] = useState(6);
   const [category, setCategory] = useState("");
   const [country, setCountry] = useState("");
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
-  const { currentUser } = useUser(user?.email);
+  const { viewRecipe } = useViewRecipe();
   const [showAll, setShowAll] = useState(false);
-
 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/recipes`);
         setRecipes(response.data);
-        setDisplayedRecipes(response.data.slice(0, 1));
+        setDisplayedRecipes(response.data.slice(0, 6));
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
@@ -63,71 +56,11 @@ const Recipes = () => {
   };
 
   const handleLoadMore = () => {
-    setRecipesToShow((prev) => prev + 1);
+    setRecipesToShow((prev) => prev + 6);
   };
 
   const handleLoadEmail = () => {
     setShowAll(true);
-  };
-
-  
-  const handleViewRecipe = async (recipe) => {
-    const formattedName = recipe?.recipeName.replace(/\s+/g, "-");
-
-    if (!user?.email) {
-      toast.error("Please login to see details");
-      return;
-    } else if (user?.email === recipe?.creatorEmail) {
-      navigate(`/recipe/${formattedName}`);
-    } else if (recipe?.purchasedBy.includes(user?.email)) {
-      navigate(`/recipe/${formattedName}`);
-    } else if (currentUser?.coin < 10) {
-      toast.error("Not enough coin, please purchase more coin.");
-      navigate("/purchase-coin");
-    } else {
-      const confirmPurchase = await Swal.fire({
-        title: "Confirmation",
-        text: "Are you sure you want to spend 10 coins to view this recipe?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No",
-      });
-
-      if (confirmPurchase.isConfirmed) {
-        try {
-          // Update user coin
-          await axios.put(`${BASE_URL}/user/coin`, {
-            email: currentUser?.email,
-            coin: currentUser?.coin - 10,
-          });
-
-          // Update recipe purchasedBy and watchCount
-          await axios.put(`${BASE_URL}/recipe/purchase`, {
-            recipeName: formattedName,
-            userEmail: user.email,
-          });
-
-          // Add 1 coin to the creator
-          const creatorResponse = await axios.post(`${BASE_URL}/user`, {
-            email: recipe.creatorEmail,
-          });
-          const creator = creatorResponse.data;
-          await axios.put(`${BASE_URL}/user/coin`, {
-            email: recipe?.creatorEmail,
-            coin: creator.coin + 1,
-          });
-
-          navigate(`/recipe/${formattedName}`);
-          window.location.reload();
-        } catch (error) {
-          console.error("Error processing purchase:", error);
-          toast.error("An error occurred while processing the purchase.");
-        }
-      }
-    }
   };
 
   return (
@@ -163,7 +96,7 @@ const Recipes = () => {
             ))}
           </select>
         </div>
-        <div className="flex items-center justify-center ">
+        <div className="flex items-center justify-center">
           <input
             type="text"
             className="rounded border p-2"
@@ -173,7 +106,6 @@ const Recipes = () => {
           />
         </div>
       </div>
-
       <div className="overflow-x-auto">
         {displayedRecipes.length > 0 ? (
           <table className="table w-full border">
@@ -237,7 +169,7 @@ const Recipes = () => {
                   <td>
                     <button
                       className="btn btn-primary btn-sm"
-                      onClick={() => handleViewRecipe(recipe)}
+                      onClick={() => viewRecipe(recipe)}
                     >
                       View The Recipe
                     </button>
@@ -249,7 +181,7 @@ const Recipes = () => {
         ) : (
           <h4 className="mt-6 text-center font-medium">No data found</h4>
         )}
-      </div>
+      </div>{" "}
       {displayedRecipes.length > 0 &&
         displayedRecipes.length < recipes.length && (
           <div className="mt-6 text-center">
@@ -263,3 +195,5 @@ const Recipes = () => {
 };
 
 export default Recipes;
+
+     

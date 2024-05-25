@@ -26,15 +26,15 @@ const NavBar = () => {
     toast.success("Successfully logged out!");
   };
 
-  console.log(user, 'user')
+  // console.log(user, 'user')
   const { currentUser } = useUser(user?.email);
-  console.log(currentUser, "currentUser");
+  // console.log(currentUser, "currentUser");
 
   
 
   const handleGoogleSignIn = () => {
     googleSignIn().then((result) => {
-      console.log(result.user);
+      // console.log(result.user);
       const userInfo = {
         email: result.user?.email,
         displayName: result.user?.displayName,

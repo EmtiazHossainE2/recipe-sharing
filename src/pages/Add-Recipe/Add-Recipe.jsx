@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../providers/AuthProvider';
 import { BASE_URL, COUNTRIES } from '../../config';
 import toast from 'react-hot-toast';
+import useUser from '../../hooks/useUser';
 
 const AddRecipe = () => {
   const {
@@ -16,6 +17,7 @@ const AddRecipe = () => {
 
   const { user } = useContext(AuthContext);
   // console.log(user , 'user')
+  const { currentUser } = useUser(user?.email);
 
   const onSubmit = async (data) => {
     try {
@@ -40,13 +42,22 @@ const AddRecipe = () => {
         purchasedBy: [],
       };
       console.log(recipeData, "recipeData");
-      
+
       await axios.post(`${BASE_URL}/recipe`, recipeData).then((res) => {
         console.log(res.data);
+      });
+      // Update user coin
+      await axios.put(`${BASE_URL}/user/coin`, {
+        email: currentUser?.email,
+        coin: currentUser?.coin + 1,
       });
 
       reset();
       toast.success("Recipe added successfully!!");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.error("Error adding recipe:", error);
       toast.error("Recipe added successfully!!");
