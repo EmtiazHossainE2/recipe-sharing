@@ -196,3 +196,24 @@ export const COUNTRIES = [
   "Zambia",
   "Zimbabwe",
 ];
+
+export const PACKAGES = [
+  {
+    id: "standard",
+    title: "Standard Plan",
+    price: 1,
+    coin: 100,
+  },
+  {
+    id: "pro",
+    title: "Pro Plan",
+    price: 5,
+    coin: 500,
+  },
+  {
+    id: "exclusive",
+    title: "Exclusive Plan",
+    price: 10,
+    coin: 1000,
+  },
+];
