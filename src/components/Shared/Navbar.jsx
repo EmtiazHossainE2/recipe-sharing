@@ -43,7 +43,7 @@ const NavBar = () => {
         coin: 50,
       };
       
-      // console.log(userInfo)
+      console.log(userInfo)
       toast.success("Successfully logged in!");
       window.location.reload()
       axios.post(`${BASE_URL}/users`, userInfo).then((res) => {

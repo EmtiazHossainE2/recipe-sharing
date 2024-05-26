@@ -200,19 +200,24 @@ const Recipes = () => {
                   <td>{recipe?.country}</td>
                   <td>{recipe?.watchCount}</td>
                   <td>
-                    {recipe?.reaction?.includes(user?.email) ? (
-                      <FaHeart
-                        size={20}
-                        className="cursor-pointer text-red-500"
-                        onClick={() => toggleReaction(recipe._id)}
-                      />
-                    ) : (
-                      <FaRegHeart
-                        size={20}
-                        className="cursor-pointer"
-                        onClick={() => toggleReaction(recipe._id)}
-                      />
-                    )}
+                    <div className="flex flex-col space-y-2 items-center justify-center space-x-2">
+                      <p>Love : {recipe?.reaction?.length}</p>
+                      <p>
+                        {recipe?.reaction?.includes(user?.email) ? (
+                          <FaHeart
+                            size={20}
+                            className="cursor-pointer text-red-500"
+                            onClick={() => toggleReaction(recipe._id)}
+                          />
+                        ) : (
+                          <FaRegHeart
+                            size={20}
+                            className="cursor-pointer"
+                            onClick={() => toggleReaction(recipe._id)}
+                          />
+                        )}
+                      </p>
+                    </div>
                   </td>
                   <td>
                     <button
