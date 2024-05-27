@@ -1,12 +1,21 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../components/Shared/Navbar";
 import Footer from "../components/Shared/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Main = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const userAcknowledged = localStorage.getItem("userAcknowledged");
+    if (!userAcknowledged) {
+      setIsModalOpen(true);
+    }
+  }, []);
 
   const handleOkayClick = () => {
+    
+    localStorage.setItem("userAcknowledged", "true");
     setIsModalOpen(false);
   };
 
@@ -21,8 +30,8 @@ const Main = () => {
           <div className="w-6/12 max-w-5xl rounded-lg bg-white px-6 py-12 text-center">
             <h2 className="mb-4 text-2xl font-bold">Notice</h2>
             <p className="mb-6 text-lg font-bold text-red-500">
-              If Server is down, please login and hard reload.{" "}
-              <br className="hidden lg:block" /> Sometimes free server is down.
+              If Server is down, please login and hard reload. <br className="hidden lg:block"/> Sometimes free
+              server is down.
             </p>
             <button
               onClick={handleOkayClick}
