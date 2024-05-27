@@ -148,7 +148,7 @@ const Recipes = () => {
                 <th>Purchased By</th>
                 <th>Creator Email</th>
                 <th>Country</th>
-                <th>Total Watch</th>
+                {/* <th>Total Watch</th> */}
                 <th>Favorite</th>
                 <th>Action</th>
               </tr>
@@ -156,7 +156,10 @@ const Recipes = () => {
             <tbody>
               {displayedRecipes.map((recipe) => (
                 <tr key={recipe?._id}>
-                  <td>{recipe?.recipeName}</td>
+                  <td className="flex flex-col">
+                    <span>{recipe?.recipeName}</span>
+                    <span className="text-gray-500 text-sm">Total watch : {recipe?.watchCount}</span>
+                  </td>
                   <td>
                     <img
                       src={recipe?.recipeImage}
@@ -198,9 +201,9 @@ const Recipes = () => {
 
                   <td>{recipe?.creatorEmail}</td>
                   <td>{recipe?.country}</td>
-                  <td>{recipe?.watchCount}</td>
+                  {/* <td>{recipe?.watchCount}</td> */}
                   <td>
-                    <div className="flex flex-col space-y-2 items-center justify-center space-x-2">
+                    <div className="flex flex-col items-center justify-center space-x-2 space-y-2">
                       <p>Love : {recipe?.reaction?.length}</p>
                       <p>
                         {recipe?.reaction?.includes(user?.email) ? (

@@ -46,11 +46,11 @@ const Banner = () => {
                 </Link>
                 {user ? (
                   <Link
-                    to="/add-recipes"
+                    to="/add-recipe"
                     className="bg-primary lg:ml-2 mt-8 inline-flex items-center rounded-2xl px-6 py-3 font-semibold text-white transition-all duration-200 lg:mt-16"
                     role="button"
                   >
-                    Add recipes
+                    Add recipe
                     <svg
                       className="-mr-2 ml-8 h-6 w-6"
                       xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +75,7 @@ const Banner = () => {
                         document.getElementById("login_modal").showModal()
                       }
                     >
-                      Add recipes
+                      Add recipe
                       <svg
                         className="-mr-2 ml-8 h-6 w-6"
                         xmlns="http://www.w3.org/2000/svg"
